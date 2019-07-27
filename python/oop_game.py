@@ -1,5 +1,6 @@
 from sys import exit
 from random import randint
+from six.moves import input as input
 
 class Scene(object):
     def enter(self):
@@ -52,13 +53,13 @@ class CentralCorridor(Scene):
 
         action = input("S for shoot, D for dodge, C for cry >")
 
-        if action == 'S':
+        if action.upper() == 'S':
             print('U try to shoot but if makes Alien angry, not ded. He bite ur face off.')
             return 'death'
-        elif action == 'D':
+        elif action.upper() == 'D':
             print('You jump out of the way and sruvive, keep running to escape pod')
             return 'escape pod'
-        elif action == 'C':
+        elif action.upper() == 'C':
             print('U cry baby tears and alien feels bad and helps you to escape pod')
             return 'escape pod'
 
