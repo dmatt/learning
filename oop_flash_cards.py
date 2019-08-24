@@ -38,7 +38,7 @@ except Exception as e:
 
 def convert(snippet, phrase):
     class_names = [w.capitalize() for w in random.sample(WORDS, snippet.count("%%%"))]
-    other_names = random.sample(WORDS, snippet.count("***"))
+    other_names = )
     results = []
     param_names = []
 
