@@ -6,7 +6,8 @@ from pathlib import Path
 JOURNAL_FOLDER = Path('/Users/dmatt/Desktop/Daily\ Journal/')
 FILE_PREFIX = 'Journal Entry '
 FILE_EXT = '.txt'
-# Questions come from this 5 Minute Journal system https://www.intelligentchange.com/blogs/news/five-minute-journal-tips
+# Questions come from this 5 Minute Journal system:
+# https://www.intelligentchange.com/blogs/news/five-minute-journal-tips
 QUESTIONS = {
     'one': "I am greatful for...",
     'two': "What would make today great?",
@@ -18,10 +19,23 @@ QUESTIONS = {
 class FileHandler(object):
     """Reads, writes, and looks up journal entry text files"""
     def __init__(self, entry):
-        self.entry = entry
-        self.filename = FILE_PREFIX + str(entry.date) + FILE_EXT
+        self.entry = entry # instance of an Entry object to handle
+        self.filename = '{} {} {}'.format(FILE_PREFIX, str(entry.date), FILE_EXT)
 
     def write_entry(self):
+        """
+        Opens file and writes questions/answers in the format:
+
+        Date
+
+        **Question 1**
+        Answer
+
+        **Question 2**
+        Answer
+
+        etc.
+        """
         with open(JOURNAL_FOLDER / self.filename, w) as f:
             f.write(entry.date + '\n')
             for k, v in self.entry.answers.items():
@@ -42,18 +56,17 @@ class MotivationalQuote(object):
 
 
 class Entry(object):
-    """Collection of questions, user input answers, and date. self.answers has the following structure:
-
+    """
+    Collection of questions, user input answers, and date. self.answers has the following structure:
     {
         "one": "answer",
         "two": "answer",
     }
-
     """
     def __init__(self, questions=QUESTIONS):
         self.date = datetime.now()
-        self.answers = dict()
         self.questions = questions
+        self.answers = dict()
 
     def create(self):
         """Iterates through all available questions and adds user input to the answers dictionary"""
@@ -65,7 +78,7 @@ class Entry(object):
 
 
 class Prompt(object):
-    """Supports asking a question to command line and returns an answer"""
+    """Asks a question to command line and returns user's answer as a string"""
     def intro(self):
         a_quote = MotivationalQuote()
         print("{} {}".format(datetime.now(), a_quote.get()))
