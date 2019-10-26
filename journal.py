@@ -3,9 +3,10 @@
 from datetime import datetime
 from pathlib import Path
 
-JOURNAL_FOLDER = Path('/Users/dmatt/Desktop/Daily\ Journal/')
+JOURNAL_FOLDER = Path('/Users/dmatt/Desktop/Daily Journal/')
+
 FILE_PREFIX = 'Journal Entry '
-FILE_EXT = '.txt'
+FILE_EXT = 'txt'
 # Questions come from this 5 Minute Journal system:
 # https://www.intelligentchange.com/blogs/news/five-minute-journal-tips
 QUESTIONS = {
@@ -16,11 +17,16 @@ QUESTIONS = {
     'five': "How could I have made today even better?",
 }
 
+def format_date(datetime_obj, simple=False):
+    if simple:
+        return datetime_obj.strftime("%m-%d-%Y")
+    return datetime_obj.strftime("%m/%d/%Y, %H:%M:%S")
+
 class FileHandler(object):
     """Reads, writes, and looks up journal entry text files"""
     def __init__(self, entry):
         self.entry = entry # instance of an Entry object to handle
-        self.filename = '{} {} {}'.format(FILE_PREFIX, str(entry.date), FILE_EXT)
+        self.filename = '{} {}.{}'.format(FILE_PREFIX, format_date(self.entry.date, simple=True), FILE_EXT)
 
     def write_entry(self):
         """
@@ -36,8 +42,9 @@ class FileHandler(object):
 
         etc.
         """
-        with open(JOURNAL_FOLDER / self.filename, w) as f:
-            f.write(entry.date + '\n')
+        p = JOURNAL_FOLDER / self.filename
+        with p.open(mode='w') as f:
+            f.write(format_date(self.entry.date) + '\n\n')
             for k, v in self.entry.answers.items():
                 f.write('**{}**\n{}\n\n'.format(self.entry.questions[k], v))
 
@@ -81,7 +88,7 @@ class Prompt(object):
     """Asks a question to command line and returns user's answer as a string"""
     def intro(self):
         a_quote = MotivationalQuote()
-        print("{} {}".format(datetime.now(), a_quote.get()))
+        print("{} {} {} {} {}".format('\n\n', format_date(datetime.now()), '\n\n', a_quote.get(), '\n\n',))
 
     def ask_question(self, question):
         answer = input(question + ' ')
