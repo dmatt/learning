@@ -47,6 +47,7 @@ class FileHandler(object):
             f.write(format_date(self.entry.date) + '\n\n')
             for k, v in self.entry.answers.items():
                 f.write('**{}**\n{}\n\n'.format(self.entry.questions[k], v))
+        Prompt(self.entry).outro()
 
 
 class MotivationalQuote(object):
@@ -86,6 +87,9 @@ class Entry(object):
 
 class Prompt(object):
     """Asks a question to command line and returns user's answer as a string"""
+    def __init__(self, entry=None):
+        self.entry = entry # instance of an Entry object to handle
+
     def intro(self):
         a_quote = MotivationalQuote()
         print("{} {} {} {} {}".format('\n\n', format_date(datetime.now()), '\n\n', a_quote.get(), '\n\n',))
@@ -94,6 +98,10 @@ class Prompt(object):
         answer = input(question + ' ')
         return str(answer)
 
+    def outro(self):
+        print("{}Saved Journal Entry for {}, see you tomorrow! {}".format( \
+            '\n', format_date(self.entry.date, simple=True),'\n'
+        ))
 
 if __name__ == '__main__':
     an_entry = Entry()
