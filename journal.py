@@ -81,7 +81,13 @@ class Prompt(object):
 
     def intro(self):
         a_quote = Motivational()
-        print("{} {} {} {} {}".format('\n\n', format_date(datetime.now()), '\n\n', a_quote.get(), '\n\n',))
+        print("{}{}{}{}{}".format(
+            '\n',
+            format_date(datetime.now()),
+            '\n',
+            a_quote.get(),
+            '\n',
+        ))
 
     def ask_question(self, question):
         answer = input(question + ' ')
