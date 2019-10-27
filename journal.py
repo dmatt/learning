@@ -3,6 +3,8 @@
 from datetime import datetime
 from pathlib import Path
 
+from quotes import *
+
 JOURNAL_FOLDER = Path('/Users/dmatt/Desktop/Daily Journal/')
 
 FILE_PREFIX = 'Journal Entry '
@@ -50,19 +52,6 @@ class FileHandler(object):
         Prompt(self.entry).outro()
 
 
-class MotivationalQuote(object):
-    def __init__(self):
-        self.quote = 'You are alive, that is pretty OK!'
-        self.by = 'Unknown'
-
-    def get(self):
-        return "\"{}\" – {}".format(self.quote, self.by)
-
-    def get_new(self):
-        # TODO: Get this from the internets
-        pass
-
-
 class Entry(object):
     """
     Collection of questions, user input answers, and date. self.answers has the following structure:
@@ -91,7 +80,7 @@ class Prompt(object):
         self.entry = entry # instance of an Entry object to handle
 
     def intro(self):
-        a_quote = MotivationalQuote()
+        a_quote = Motivational()
         print("{} {} {} {} {}".format('\n\n', format_date(datetime.now()), '\n\n', a_quote.get(), '\n\n',))
 
     def ask_question(self, question):
