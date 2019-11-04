@@ -85,7 +85,7 @@ class Prompt(object):
             '\n',
             format_date(datetime.now()),
             '\n',
-            a_quote.get(),
+            a_quote,
             '\n',
         ))
 
