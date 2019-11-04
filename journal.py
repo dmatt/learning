@@ -35,6 +35,7 @@ class FileHandler(object):
         Opens file and writes questions/answers in the format:
 
         Date
+        Quote
 
         **Question 1**
         Answer
@@ -46,7 +47,10 @@ class FileHandler(object):
         """
         p = JOURNAL_FOLDER / self.filename
         with p.open(mode='w') as f:
-            f.write(format_date(self.entry.date) + '\n\n')
+            f.write(
+                format_date(self.entry.date) + '\n' +
+                str(self.entry.quote) + '\n\n'
+            )
             for k, v in self.entry.answers.items():
                 f.write('**{}**\n{}\n\n'.format(self.entry.questions[k], v))
         Prompt(self.entry).outro()
@@ -64,6 +68,7 @@ class Entry(object):
         self.date = datetime.now()
         self.questions = questions
         self.answers = dict()
+        self.quote = Motivational()
 
     def create(self):
         """Iterates through all available questions and adds user input to the answers dictionary"""
@@ -80,12 +85,11 @@ class Prompt(object):
         self.entry = entry # instance of an Entry object to handle
 
     def intro(self):
-        a_quote = Motivational()
         print("{}{}{}{}{}".format(
             '\n',
             format_date(datetime.now()),
             '\n',
-            a_quote,
+            Motivational(),
             '\n',
         ))
 
