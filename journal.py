@@ -2,13 +2,15 @@
 
 from datetime import datetime
 from pathlib import Path
+import argparse
 
 from quotes import *
 
-JOURNAL_FOLDER = Path('/Users/dmatt/Desktop/Daily Journal/')
+JOURNAL_FOLDER = Path('/Users/dmatt/Dropbox (Personal)/Daily Journal/')
 
 FILE_PREFIX = 'Journal Entry '
 FILE_EXT = 'txt'
+
 # Questions come from this 5 Minute Journal system:
 # https://www.intelligentchange.com/blogs/news/five-minute-journal-tips
 QUESTIONS = {
@@ -102,7 +104,13 @@ class Prompt(object):
             '\n', format_date(self.entry.date, simple=True),'\n'
         ))
 
-if __name__ == '__main__':
+if __name__ == '__main__':    
+    parser = argparse.ArgumentParser(description='Use --m=a for AM and --m=p for PM')
+    parser.add_argument("--m", default='a', help="This is the meridiem variable")
+    args = parser.parse_args()
+    # Does the user want AM or PM
+    meridiem = args.m
+
     an_entry = Entry()
     an_entry.create()
     filer = FileHandler(an_entry)
