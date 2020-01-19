@@ -13,17 +13,18 @@ FILE_EXT = 'txt'
 
 # Questions come from this 5 Minute Journal system:
 # https://www.intelligentchange.com/blogs/news/five-minute-journal-tips
-QUESTIONS = {
-    'one': "I am greatful for...",
-    'two': "What would make today great?",
-    'three': "Daily affirmations: I am...",
-    'four': "3 amazing things that happened today...",
-    'five': "How could I have made today even better?",
-}
+QUESTIONS = [
+    "I am greatful for...",
+    "What would make today great?",
+    "Daily affirmations: I am...",
+    "3 amazing things that happened today...",
+    "How could I have made today even better?",
+]
 
 def format_date(datetime_obj, simple=False):
     if simple:
         return datetime_obj.strftime("%m-%d-%Y")
+
     return datetime_obj.strftime("%m/%d/%Y, %H:%M:%S")
 
 class FileHandler(object):
@@ -48,13 +49,14 @@ class FileHandler(object):
         etc.
         """
         p = JOURNAL_FOLDER / self.filename
-        with p.open(mode='w') as f:
+        with p.open(mode='a+') as f:
             f.write(
                 format_date(self.entry.date) + '\n' +
                 str(self.entry.quote) + '\n\n'
             )
             for k, v in self.entry.answers.items():
-                f.write('**{}**\n{}\n\n'.format(self.entry.questions[k], v))
+                f.write('**{}**\n{}\n\n'.format(k, v))
+
         Prompt(self.entry).outro()
 
 
@@ -68,17 +70,21 @@ class Entry(object):
     """
     def __init__(self, questions=QUESTIONS):
         self.date = datetime.now()
-        self.questions = questions
         self.answers = dict()
         self.quote = Motivational()
+        full_day = not (meridiem.a != meridiem.p)
+        questions_sliced = questions[:3] if meridiem.a else questions[3:]
+        self.questions = questions if full_day else questions_sliced
+
 
     def create(self):
         """Iterates through all available questions and adds user input to the answers dictionary"""
         prompt = Prompt()
         prompt.intro()
-        for k, v in self.questions.items():
-            answer = prompt.ask_question(v)
-            self.answers[k] = answer
+
+        for q in self.questions:
+            answer = prompt.ask_question(q)
+            self.answers[q] = answer
 
 
 class Prompt(object):
@@ -100,16 +106,19 @@ class Prompt(object):
         return str(answer)
 
     def outro(self):
-        print("{}Saved Journal Entry for {}, see you tomorrow! {}".format( \
-            '\n', format_date(self.entry.date, simple=True),'\n'
+        later = "this evening" if meridiem.a else "tomorrow"
+        print("{}Saved Journal Entry for {}, see you {}! {}".format(
+            '\n', format_date(self.entry.date, simple=True),
+            later,
+            '\n'
         ))
 
 if __name__ == '__main__':    
-    parser = argparse.ArgumentParser(description='Use --m=a for AM and --m=p for PM')
-    parser.add_argument("--m", default='a', help="This is the meridiem variable")
-    args = parser.parse_args()
-    # Does the user want AM or PM
-    meridiem = args.m
+    parser = argparse.ArgumentParser(description='Use -a for AM and -p for PM')
+    parser.add_argument("-a", help="This is the AM variable", action="store_true", default=False)
+    parser.add_argument("-p", help="This is the PM variable", action="store_true", default=False)
+    # Does the user want AM or PM?
+    meridiem = parser.parse_args()
 
     an_entry = Entry()
     an_entry.create()
