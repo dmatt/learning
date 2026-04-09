@@ -5,163 +5,179 @@
       "id": "bubble-sort",
       "label": "Bubble Sort Visualization",
       "type": "source",
-      "file": "wiki/sources/bubble-sort.md"
+      "file": "wiki/sources/bubble-sort.md",
+      "tags": ["sorting", "algorithms", "visualization", "oop"]
     },
     {
       "id": "trees",
       "label": "Binary Tree Traversals",
       "type": "source",
-      "file": "wiki/sources/trees.md"
+      "file": "wiki/sources/trees.md",
+      "tags": ["trees", "data-structures", "recursion", "traversal"]
     },
     {
       "id": "linked-list",
       "label": "Linked List Implementation",
       "type": "source",
-      "file": "wiki/sources/linked-list.md"
+      "file": "wiki/sources/linked-list.md",
+      "tags": ["data-structures", "linked-list", "oop"]
     },
     {
       "id": "oop-inheritance",
-      "label": "OOP Inheritance \u2014 Animal Kingdom",
+      "label": "OOP Inheritance — Animal Kingdom",
       "type": "source",
-      "file": "wiki/sources/oop-inheritance.md"
+      "file": "wiki/sources/oop-inheritance.md",
+      "tags": ["oop", "inheritance", "polymorphism", "abstraction"]
     },
     {
       "id": "oop-game",
       "label": "OOP Space Adventure Game",
       "type": "source",
-      "file": "wiki/sources/oop-game.md"
+      "file": "wiki/sources/oop-game.md",
+      "tags": ["oop", "game", "inheritance", "state-machine"]
     },
     {
       "id": "oop-flash-cards",
       "label": "OOP Flash Cards Drill",
       "type": "source",
-      "file": "wiki/sources/oop-flash-cards.md"
+      "file": "wiki/sources/oop-flash-cards.md",
+      "tags": ["oop", "learning-tool", "drills"]
     },
     {
       "id": "oop-basics",
-      "label": "OOP Basics \u2014 Song Class",
+      "label": "OOP Basics — Song Class",
       "type": "source",
-      "file": "wiki/sources/oop-basics.md"
+      "file": "wiki/sources/oop-basics.md",
+      "tags": ["oop", "basics", "python2"]
     },
     {
       "id": "abstraction-todo",
-      "label": "Abstraction Todo \u2014 Journal App Design",
+      "label": "Abstraction Todo — Journal App Design",
       "type": "source",
-      "file": "wiki/sources/abstraction-todo.md"
+      "file": "wiki/sources/abstraction-todo.md",
+      "tags": ["design", "abstraction", "architecture", "journal"]
     },
     {
       "id": "BubbleSort",
       "label": "Bubble Sort",
       "type": "concept",
-      "file": "wiki/concepts/BubbleSort.md"
+      "file": "wiki/concepts/BubbleSort.md",
+      "tags": ["sorting", "algorithms", "complexity"]
     },
     {
       "id": "BinaryTree",
       "label": "Binary Tree",
       "type": "concept",
-      "file": "wiki/concepts/BinaryTree.md"
+      "file": "wiki/concepts/BinaryTree.md",
+      "tags": ["data-structures", "trees", "traversal"]
     },
     {
       "id": "LinkedList",
       "label": "Linked List",
       "type": "concept",
-      "file": "wiki/concepts/LinkedList.md"
+      "file": "wiki/concepts/LinkedList.md",
+      "tags": ["data-structures", "linked-list"]
     },
     {
       "id": "Inheritance",
       "label": "Inheritance",
       "type": "concept",
-      "file": "wiki/concepts/Inheritance.md"
+      "file": "wiki/concepts/Inheritance.md",
+      "tags": ["oop", "inheritance", "polymorphism"]
     },
     {
       "id": "ObjectOrientedProgramming",
       "label": "Object-Oriented Programming",
       "type": "concept",
-      "file": "wiki/concepts/ObjectOrientedProgramming.md"
+      "file": "wiki/concepts/ObjectOrientedProgramming.md",
+      "tags": ["oop", "design", "python"]
     },
     {
       "id": "Recursion",
       "label": "Recursion",
       "type": "concept",
-      "file": "wiki/concepts/Recursion.md"
+      "file": "wiki/concepts/Recursion.md",
+      "tags": ["algorithms", "fundamentals"]
     },
     {
       "id": "data-structures-studied",
       "label": "What data structures have I studied?",
       "type": "synthesis",
-      "file": "wiki/syntheses/data-structures-studied.md"
+      "file": "wiki/syntheses/data-structures-studied.md",
+      "tags": ["data-structures", "progress"]
     },
     {
       "id": "overview",
       "label": "Overview",
       "type": "synthesis",
-      "file": "wiki/overview.md"
+      "file": "wiki/overview.md",
+      "tags": []
     }
   ],
   "edges": [
-    { "from": "overview", "to": "LinkedList", "type": "EXTRACTED" },
-    { "from": "overview", "to": "linked-list", "type": "EXTRACTED" },
-    { "from": "overview", "to": "BinaryTree", "type": "EXTRACTED" },
-    { "from": "overview", "to": "Recursion", "type": "EXTRACTED" },
-    { "from": "overview", "to": "trees", "type": "EXTRACTED" },
-    { "from": "overview", "to": "BubbleSort", "type": "EXTRACTED" },
-    { "from": "overview", "to": "bubble-sort", "type": "EXTRACTED" },
-    { "from": "overview", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "overview", "to": "Inheritance", "type": "EXTRACTED" },
-    { "from": "overview", "to": "abstraction-todo", "type": "EXTRACTED" },
-    { "from": "overview", "to": "oop-basics", "type": "EXTRACTED" },
-    { "from": "overview", "to": "oop-flash-cards", "type": "EXTRACTED" },
-    { "from": "overview", "to": "oop-inheritance", "type": "EXTRACTED" },
-    { "from": "overview", "to": "oop-game", "type": "EXTRACTED" },
-    { "from": "data-structures-studied", "to": "LinkedList", "type": "EXTRACTED" },
-    { "from": "data-structures-studied", "to": "linked-list", "type": "EXTRACTED" },
-    { "from": "data-structures-studied", "to": "BinaryTree", "type": "EXTRACTED" },
-    { "from": "data-structures-studied", "to": "trees", "type": "EXTRACTED" },
-    { "from": "data-structures-studied", "to": "Recursion", "type": "EXTRACTED" },
-    { "from": "data-structures-studied", "to": "bubble-sort", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "oop-basics", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "bubble-sort", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "trees", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "linked-list", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "oop-inheritance", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "oop-game", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "oop-flash-cards", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "abstraction-todo", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "Inheritance", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "BubbleSort", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "BinaryTree", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "LinkedList", "type": "EXTRACTED" },
-    { "from": "ObjectOrientedProgramming", "to": "Recursion", "type": "EXTRACTED" },
-    { "from": "BubbleSort", "to": "bubble-sort", "type": "EXTRACTED" },
-    { "from": "BubbleSort", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "BinaryTree", "to": "trees", "type": "EXTRACTED" },
-    { "from": "BinaryTree", "to": "Recursion", "type": "EXTRACTED" },
-    { "from": "BinaryTree", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "LinkedList", "to": "linked-list", "type": "EXTRACTED" },
-    { "from": "LinkedList", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "LinkedList", "to": "BinaryTree", "type": "EXTRACTED" },
-    { "from": "Inheritance", "to": "oop-inheritance", "type": "EXTRACTED" },
-    { "from": "Inheritance", "to": "oop-game", "type": "EXTRACTED" },
-    { "from": "Inheritance", "to": "abstraction-todo", "type": "EXTRACTED" },
-    { "from": "Inheritance", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "Recursion", "to": "trees", "type": "EXTRACTED" },
-    { "from": "Recursion", "to": "oop-game", "type": "EXTRACTED" },
-    { "from": "Recursion", "to": "BinaryTree", "type": "EXTRACTED" },
-    { "from": "bubble-sort", "to": "BubbleSort", "type": "EXTRACTED" },
-    { "from": "bubble-sort", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "trees", "to": "BinaryTree", "type": "EXTRACTED" },
-    { "from": "trees", "to": "Recursion", "type": "EXTRACTED" },
-    { "from": "trees", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "linked-list", "to": "LinkedList", "type": "EXTRACTED" },
-    { "from": "linked-list", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "oop-inheritance", "to": "Inheritance", "type": "EXTRACTED" },
-    { "from": "oop-inheritance", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "oop-game", "to": "Inheritance", "type": "EXTRACTED" },
-    { "from": "oop-game", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "oop-game", "to": "Recursion", "type": "EXTRACTED" },
-    { "from": "oop-flash-cards", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "oop-basics", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" },
-    { "from": "abstraction-todo", "to": "Inheritance", "type": "EXTRACTED" },
-    { "from": "abstraction-todo", "to": "ObjectOrientedProgramming", "type": "EXTRACTED" }
+    {"from": "overview", "to": "LinkedList", "type": "EXTRACTED"},
+    {"from": "overview", "to": "linked-list", "type": "EXTRACTED"},
+    {"from": "overview", "to": "BinaryTree", "type": "EXTRACTED"},
+    {"from": "overview", "to": "Recursion", "type": "EXTRACTED"},
+    {"from": "overview", "to": "trees", "type": "EXTRACTED"},
+    {"from": "overview", "to": "BubbleSort", "type": "EXTRACTED"},
+    {"from": "overview", "to": "bubble-sort", "type": "EXTRACTED"},
+    {"from": "overview", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "overview", "to": "Inheritance", "type": "EXTRACTED"},
+    {"from": "overview", "to": "abstraction-todo", "type": "EXTRACTED"},
+    {"from": "overview", "to": "oop-basics", "type": "EXTRACTED"},
+    {"from": "overview", "to": "oop-flash-cards", "type": "EXTRACTED"},
+    {"from": "overview", "to": "oop-inheritance", "type": "EXTRACTED"},
+    {"from": "overview", "to": "oop-game", "type": "EXTRACTED"},
+    {"from": "data-structures-studied", "to": "LinkedList", "type": "EXTRACTED"},
+    {"from": "data-structures-studied", "to": "linked-list", "type": "EXTRACTED"},
+    {"from": "data-structures-studied", "to": "BinaryTree", "type": "EXTRACTED"},
+    {"from": "data-structures-studied", "to": "trees", "type": "EXTRACTED"},
+    {"from": "data-structures-studied", "to": "Recursion", "type": "EXTRACTED"},
+    {"from": "data-structures-studied", "to": "bubble-sort", "type": "EXTRACTED"},
+    {"from": "bubble-sort", "to": "BubbleSort", "type": "EXTRACTED"},
+    {"from": "bubble-sort", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "trees", "to": "BinaryTree", "type": "EXTRACTED"},
+    {"from": "trees", "to": "Recursion", "type": "EXTRACTED"},
+    {"from": "trees", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "linked-list", "to": "LinkedList", "type": "EXTRACTED"},
+    {"from": "linked-list", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "oop-inheritance", "to": "Inheritance", "type": "EXTRACTED"},
+    {"from": "oop-inheritance", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "oop-game", "to": "Inheritance", "type": "EXTRACTED"},
+    {"from": "oop-game", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "oop-game", "to": "Recursion", "type": "EXTRACTED"},
+    {"from": "oop-flash-cards", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "oop-basics", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "abstraction-todo", "to": "Inheritance", "type": "EXTRACTED"},
+    {"from": "abstraction-todo", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "BubbleSort", "to": "bubble-sort", "type": "EXTRACTED"},
+    {"from": "BubbleSort", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "BinaryTree", "to": "trees", "type": "EXTRACTED"},
+    {"from": "BinaryTree", "to": "Recursion", "type": "EXTRACTED"},
+    {"from": "BinaryTree", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "LinkedList", "to": "linked-list", "type": "EXTRACTED"},
+    {"from": "LinkedList", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "LinkedList", "to": "BinaryTree", "type": "EXTRACTED"},
+    {"from": "Inheritance", "to": "oop-inheritance", "type": "EXTRACTED"},
+    {"from": "Inheritance", "to": "oop-game", "type": "EXTRACTED"},
+    {"from": "Inheritance", "to": "abstraction-todo", "type": "EXTRACTED"},
+    {"from": "Inheritance", "to": "ObjectOrientedProgramming", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "oop-basics", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "bubble-sort", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "trees", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "linked-list", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "oop-inheritance", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "oop-game", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "oop-flash-cards", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "abstraction-todo", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "Inheritance", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "BubbleSort", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "BinaryTree", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "LinkedList", "type": "EXTRACTED"},
+    {"from": "ObjectOrientedProgramming", "to": "Recursion", "type": "EXTRACTED"},
+    {"from": "Recursion", "to": "trees", "type": "EXTRACTED"},
+    {"from": "Recursion", "to": "oop-game", "type": "EXTRACTED"},
+    {"from": "Recursion", "to": "BinaryTree", "type": "EXTRACTED"}
   ]
 }
