@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiki Knowledge Graph</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+  }
+  #graph-container {
+    width: 100vw;
+    height: 100vh;
+  }
+  #controls {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #search-box {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    color: #e0e0e0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 280px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #search-box:focus {
+    border-color: #e94560;
+  }
+  #search-box::placeholder {
+    color: #555;
+  }
+  #legend {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 14px;
+    width: 280px;
+  }
+  #legend h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+    margin-bottom: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  #stats {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 14px;
+    width: 280px;
+    font-size: 13px;
+  }
+  #stats h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+    margin-bottom: 10px;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    color: #e94560;
+    font-weight: 600;
+  }
+  #detail-panel {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 20px;
+    width: 320px;
+    display: none;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+  #detail-panel h2 {
+    font-size: 16px;
+    margin-bottom: 4px;
+    color: #fff;
+    word-wrap: break-word;
+  }
+  #detail-panel .detail-type {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+  #detail-panel .detail-section {
+    margin-top: 12px;
+  }
+  #detail-panel .detail-section h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+    margin-bottom: 6px;
+  }
+  #detail-panel .detail-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  #detail-panel .detail-section li {
+    font-size: 13px;
+    padding: 3px 0;
+    color: #ccc;
+  }
+  #detail-panel .detail-section li::before {
+    content: "\2192 ";
+    color: #555;
+  }
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .tag {
+    background: #0f3460;
+    color: #8ab4f8;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+  }
+  #close-detail {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  #close-detail:hover { color: #e94560; }
+</style>
+</head>
+<body>
+
+<div id="graph-container"></div>
+
+<div id="controls">
+  <input type="text" id="search-box" placeholder="Search nodes...">
+
+  <div id="legend">
+    <h3>Legend</h3>
+    <div class="legend-item"><div class="legend-dot" style="background:#4CAF50"></div> Source</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2196F3"></div> Entity</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FF9800"></div> Concept</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9C27B0"></div> Synthesis</div>
+  </div>
+
+  <div id="stats">
+    <h3>Graph Stats</h3>
+    <div class="stat-row"><span>Nodes</span><span class="stat-value" id="stat-nodes">0</span></div>
+    <div class="stat-row"><span>Edges</span><span class="stat-value" id="stat-edges">0</span></div>
+    <div class="stat-row"><span>Sources</span><span class="stat-value" id="stat-sources">0</span></div>
+    <div class="stat-row"><span>Concepts</span><span class="stat-value" id="stat-concepts">0</span></div>
+    <div class="stat-row"><span>Syntheses</span><span class="stat-value" id="stat-syntheses">0</span></div>
+    <div class="stat-row"><span>Entities</span><span class="stat-value" id="stat-entities">0</span></div>
+  </div>
+</div>
+
+<div id="detail-panel">
+  <button id="close-detail">&times;</button>
+  <h2 id="detail-title"></h2>
+  <div class="detail-type" id="detail-type-badge"></div>
+  <div id="detail-file" style="font-size:12px;color:#777;margin-bottom:8px;"></div>
+  <div id="detail-tags" class="detail-section" style="display:none;">
+    <h4>Tags</h4>
+    <div class="tag-list" id="detail-tag-list"></div>
+  </div>
+  <div id="detail-outgoing" class="detail-section" style="display:none;">
+    <h4>Links to</h4>
+    <ul id="detail-outgoing-list"></ul>
+  </div>
+  <div id="detail-incoming" class="detail-section" style="display:none;">
+    <h4>Linked from</h4>
+    <ul id="detail-incoming-list"></ul>
+  </div>
+</div>
+
+<script>
+const graphData = {
+  "nodes": [
+    {"id":"bubble-sort","label":"Bubble Sort Visualization","type":"source","file":"wiki/sources/bubble-sort.md","tags":["sorting","algorithms","visualization","oop"]},
+    {"id":"trees","label":"Binary Tree Traversals","type":"source","file":"wiki/sources/trees.md","tags":["trees","data-structures","recursion","traversal"]},
+    {"id":"linked-list","label":"Linked List Implementation","type":"source","file":"wiki/sources/linked-list.md","tags":["data-structures","linked-list","oop"]},
+    {"id":"oop-inheritance","label":"OOP Inheritance \u2014 Animal Kingdom","type":"source","file":"wiki/sources/oop-inheritance.md","tags":["oop","inheritance","polymorphism","abstraction"]},
+    {"id":"oop-game","label":"OOP Space Adventure Game","type":"source","file":"wiki/sources/oop-game.md","tags":["oop","game","inheritance","state-machine"]},
+    {"id":"oop-flash-cards","label":"OOP Flash Cards Drill","type":"source","file":"wiki/sources/oop-flash-cards.md","tags":["oop","learning-tool","drills"]},
+    {"id":"oop-basics","label":"OOP Basics \u2014 Song Class","type":"source","file":"wiki/sources/oop-basics.md","tags":["oop","basics","python2"]},
+    {"id":"abstraction-todo","label":"Abstraction Todo \u2014 Journal App Design","type":"source","file":"wiki/sources/abstraction-todo.md","tags":["design","abstraction","architecture","journal"]},
+    {"id":"BubbleSort","label":"Bubble Sort","type":"concept","file":"wiki/concepts/BubbleSort.md","tags":["sorting","algorithms","complexity"]},
+    {"id":"BinaryTree","label":"Binary Tree","type":"concept","file":"wiki/concepts/BinaryTree.md","tags":["data-structures","trees","traversal"]},
+    {"id":"LinkedList","label":"Linked List","type":"concept","file":"wiki/concepts/LinkedList.md","tags":["data-structures","linked-list"]},
+    {"id":"Inheritance","label":"Inheritance","type":"concept","file":"wiki/concepts/Inheritance.md","tags":["oop","inheritance","polymorphism"]},
+    {"id":"ObjectOrientedProgramming","label":"Object-Oriented Programming","type":"concept","file":"wiki/concepts/ObjectOrientedProgramming.md","tags":["oop","design","python"]},
+    {"id":"Recursion","label":"Recursion","type":"concept","file":"wiki/concepts/Recursion.md","tags":["algorithms","fundamentals"]},
+    {"id":"data-structures-studied","label":"What data structures have I studied?","type":"synthesis","file":"wiki/syntheses/data-structures-studied.md","tags":["data-structures","progress"]},
+    {"id":"overview","label":"Overview","type":"synthesis","file":"wiki/overview.md","tags":[]}
+  ],
+  "edges": [
+    {"from":"overview","to":"LinkedList","type":"EXTRACTED"},
+    {"from":"overview","to":"linked-list","type":"EXTRACTED"},
+    {"from":"overview","to":"BinaryTree","type":"EXTRACTED"},
+    {"from":"overview","to":"Recursion","type":"EXTRACTED"},
+    {"from":"overview","to":"trees","type":"EXTRACTED"},
+    {"from":"overview","to":"BubbleSort","type":"EXTRACTED"},
+    {"from":"overview","to":"bubble-sort","type":"EXTRACTED"},
+    {"from":"overview","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"overview","to":"Inheritance","type":"EXTRACTED"},
+    {"from":"overview","to":"abstraction-todo","type":"EXTRACTED"},
+    {"from":"overview","to":"oop-basics","type":"EXTRACTED"},
+    {"from":"overview","to":"oop-flash-cards","type":"EXTRACTED"},
+    {"from":"overview","to":"oop-inheritance","type":"EXTRACTED"},
+    {"from":"overview","to":"oop-game","type":"EXTRACTED"},
+    {"from":"data-structures-studied","to":"LinkedList","type":"EXTRACTED"},
+    {"from":"data-structures-studied","to":"linked-list","type":"EXTRACTED"},
+    {"from":"data-structures-studied","to":"BinaryTree","type":"EXTRACTED"},
+    {"from":"data-structures-studied","to":"trees","type":"EXTRACTED"},
+    {"from":"data-structures-studied","to":"Recursion","type":"EXTRACTED"},
+    {"from":"data-structures-studied","to":"bubble-sort","type":"EXTRACTED"},
+    {"from":"bubble-sort","to":"BubbleSort","type":"EXTRACTED"},
+    {"from":"bubble-sort","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"trees","to":"BinaryTree","type":"EXTRACTED"},
+    {"from":"trees","to":"Recursion","type":"EXTRACTED"},
+    {"from":"trees","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"linked-list","to":"LinkedList","type":"EXTRACTED"},
+    {"from":"linked-list","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"oop-inheritance","to":"Inheritance","type":"EXTRACTED"},
+    {"from":"oop-inheritance","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"oop-game","to":"Inheritance","type":"EXTRACTED"},
+    {"from":"oop-game","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"oop-game","to":"Recursion","type":"EXTRACTED"},
+    {"from":"oop-flash-cards","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"oop-basics","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"abstraction-todo","to":"Inheritance","type":"EXTRACTED"},
+    {"from":"abstraction-todo","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"BubbleSort","to":"bubble-sort","type":"EXTRACTED"},
+    {"from":"BubbleSort","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"BinaryTree","to":"trees","type":"EXTRACTED"},
+    {"from":"BinaryTree","to":"Recursion","type":"EXTRACTED"},
+    {"from":"BinaryTree","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"LinkedList","to":"linked-list","type":"EXTRACTED"},
+    {"from":"LinkedList","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"LinkedList","to":"BinaryTree","type":"EXTRACTED"},
+    {"from":"Inheritance","to":"oop-inheritance","type":"EXTRACTED"},
+    {"from":"Inheritance","to":"oop-game","type":"EXTRACTED"},
+    {"from":"Inheritance","to":"abstraction-todo","type":"EXTRACTED"},
+    {"from":"Inheritance","to":"ObjectOrientedProgramming","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"oop-basics","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"bubble-sort","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"trees","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"linked-list","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"oop-inheritance","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"oop-game","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"oop-flash-cards","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"abstraction-todo","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"Inheritance","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"BubbleSort","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"BinaryTree","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"LinkedList","type":"EXTRACTED"},
+    {"from":"ObjectOrientedProgramming","to":"Recursion","type":"EXTRACTED"},
+    {"from":"Recursion","to":"trees","type":"EXTRACTED"},
+    {"from":"Recursion","to":"oop-game","type":"EXTRACTED"},
+    {"from":"Recursion","to":"BinaryTree","type":"EXTRACTED"}
+  ]
+};
+
+const TYPE_COLORS = {
+  source:    "#4CAF50",
+  entity:    "#2196F3",
+  concept:   "#FF9800",
+  synthesis: "#9C27B0"
+};
+
+const TYPE_COLORS_HIGHLIGHT = {
+  source:    "#66BB6A",
+  entity:    "#42A5F5",
+  concept:   "#FFB74D",
+  synthesis: "#BA68C8"
+};
+
+// Build lookup maps
+const nodeMap = {};
+graphData.nodes.forEach(n => { nodeMap[n.id] = n; });
+
+const outgoing = {};
+const incoming = {};
+graphData.nodes.forEach(n => { outgoing[n.id] = []; incoming[n.id] = []; });
+graphData.edges.forEach(e => {
+  if (outgoing[e.from]) outgoing[e.from].push(e.to);
+  if (incoming[e.to]) incoming[e.to].push(e.from);
+});
+
+// Compute node sizes based on degree
+function nodeDegree(id) {
+  return (outgoing[id] ? outgoing[id].length : 0) + (incoming[id] ? incoming[id].length : 0);
+}
+
+// Build vis.js datasets
+const visNodes = new vis.DataSet(graphData.nodes.map(n => {
+  const deg = nodeDegree(n.id);
+  const baseSize = 16 + Math.min(deg * 3, 30);
+  return {
+    id: n.id,
+    label: n.label,
+    color: {
+      background: TYPE_COLORS[n.type] || "#888",
+      border: TYPE_COLORS[n.type] || "#888",
+      highlight: {
+        background: TYPE_COLORS_HIGHLIGHT[n.type] || "#aaa",
+        border: "#fff"
+      },
+      hover: {
+        background: TYPE_COLORS_HIGHLIGHT[n.type] || "#aaa",
+        border: "#fff"
+      }
+    },
+    size: baseSize,
+    font: {
+      color: "#e0e0e0",
+      size: 13,
+      face: "Segoe UI, sans-serif",
+      strokeWidth: 3,
+      strokeColor: "#1a1a2e"
+    },
+    shape: "dot",
+    borderWidth: 2,
+    shadow: {
+      enabled: true,
+      color: "rgba(0,0,0,0.4)",
+      size: 8
+    }
+  };
+}));
+
+const visEdges = new vis.DataSet(graphData.edges.map((e, i) => ({
+  id: i,
+  from: e.from,
+  to: e.to,
+  color: {
+    color: "#555555",
+    highlight: "#e94560",
+    hover: "#888"
+  },
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+  smooth: {
+    type: "continuous",
+    roundness: 0.2
+  },
+  width: 1.2,
+  hoverWidth: 2
+})));
+
+// Create network
+const container = document.getElementById("graph-container");
+const network = new vis.Network(container, { nodes: visNodes, edges: visEdges }, {
+  physics: {
+    enabled: true,
+    solver: "forceAtlas2Based",
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.008,
+      springLength: 160,
+      springConstant: 0.04,
+      damping: 0.4,
+      avoidOverlap: 0.5
+    },
+    stabilization: {
+      enabled: true,
+      iterations: 300,
+      updateInterval: 25
+    }
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 200,
+    navigationButtons: false,
+    keyboard: false
+  },
+  edges: {
+    smooth: {
+      type: "continuous",
+      roundness: 0.2
+    }
+  }
+});
+
+// Stats
+const typeCounts = { source: 0, concept: 0, synthesis: 0, entity: 0 };
+graphData.nodes.forEach(n => { if (typeCounts[n.type] !== undefined) typeCounts[n.type]++; });
+document.getElementById("stat-nodes").textContent = graphData.nodes.length;
+document.getElementById("stat-edges").textContent = graphData.edges.length;
+document.getElementById("stat-sources").textContent = typeCounts.source;
+document.getElementById("stat-concepts").textContent = typeCounts.concept;
+document.getElementById("stat-syntheses").textContent = typeCounts.synthesis;
+document.getElementById("stat-entities").textContent = typeCounts.entity;
+
+// Search
+const searchBox = document.getElementById("search-box");
+let allNodeIds = graphData.nodes.map(n => n.id);
+
+searchBox.addEventListener("input", function() {
+  const query = this.value.toLowerCase().trim();
+  if (!query) {
+    // Reset all nodes to full opacity
+    const updates = allNodeIds.map(id => ({
+      id: id,
+      opacity: 1.0,
+      font: { color: "#e0e0e0", size: 13, face: "Segoe UI, sans-serif", strokeWidth: 3, strokeColor: "#1a1a2e" }
+    }));
+    visNodes.update(updates);
+    const edgeUpdates = graphData.edges.map((e, i) => ({
+      id: i,
+      color: { color: "#555555", highlight: "#e94560", hover: "#888" },
+      width: 1.2
+    }));
+    visEdges.update(edgeUpdates);
+    return;
+  }
+
+  const matchedIds = new Set();
+  graphData.nodes.forEach(n => {
+    const searchStr = (n.label + " " + n.id + " " + n.type + " " + (n.tags || []).join(" ")).toLowerCase();
+    if (searchStr.includes(query)) matchedIds.add(n.id);
+  });
+
+  const nodeUpdates = allNodeIds.map(id => {
+    if (matchedIds.has(id)) {
+      return {
+        id: id,
+        opacity: 1.0,
+        font: { color: "#fff", size: 15, face: "Segoe UI, sans-serif", strokeWidth: 4, strokeColor: "#1a1a2e" }
+      };
+    } else {
+      return {
+        id: id,
+        opacity: 0.15,
+        font: { color: "rgba(224,224,224,0.15)", size: 13, face: "Segoe UI, sans-serif", strokeWidth: 3, strokeColor: "#1a1a2e" }
+      };
+    }
+  });
+  visNodes.update(nodeUpdates);
+
+  const edgeUpdates = graphData.edges.map((e, i) => {
+    if (matchedIds.has(e.from) || matchedIds.has(e.to)) {
+      return { id: i, color: { color: "#555555", highlight: "#e94560", hover: "#888" }, width: 1.2 };
+    } else {
+      return { id: i, color: { color: "rgba(85,85,85,0.1)", highlight: "#e94560", hover: "#888" }, width: 0.5 };
+    }
+  });
+  visEdges.update(edgeUpdates);
+});
+
+// Click-to-inspect
+const detailPanel = document.getElementById("detail-panel");
+const detailTitle = document.getElementById("detail-title");
+const detailTypeBadge = document.getElementById("detail-type-badge");
+const detailFile = document.getElementById("detail-file");
+const detailTags = document.getElementById("detail-tags");
+const detailTagList = document.getElementById("detail-tag-list");
+const detailOutgoing = document.getElementById("detail-outgoing");
+const detailOutgoingList = document.getElementById("detail-outgoing-list");
+const detailIncoming = document.getElementById("detail-incoming");
+const detailIncomingList = document.getElementById("detail-incoming-list");
+
+document.getElementById("close-detail").addEventListener("click", () => {
+  detailPanel.style.display = "none";
+});
+
+network.on("click", function(params) {
+  if (params.nodes.length === 0) {
+    detailPanel.style.display = "none";
+    return;
+  }
+
+  const nodeId = params.nodes[0];
+  const node = nodeMap[nodeId];
+  if (!node) return;
+
+  detailTitle.textContent = node.label;
+  detailTypeBadge.textContent = node.type;
+  detailTypeBadge.style.background = TYPE_COLORS[node.type] || "#888";
+  detailTypeBadge.style.color = "#fff";
+  detailFile.textContent = node.file;
+
+  // Tags
+  if (node.tags && node.tags.length > 0) {
+    detailTags.style.display = "block";
+    detailTagList.innerHTML = node.tags.map(t => '<span class="tag">' + t + '</span>').join("");
+  } else {
+    detailTags.style.display = "none";
+  }
+
+  // Outgoing links
+  const out = outgoing[nodeId] || [];
+  if (out.length > 0) {
+    detailOutgoing.style.display = "block";
+    detailOutgoingList.innerHTML = out.map(id => {
+      const target = nodeMap[id];
+      return "<li>" + (target ? target.label : id) + "</li>";
+    }).join("");
+  } else {
+    detailOutgoing.style.display = "none";
+  }
+
+  // Incoming links
+  const inc = incoming[nodeId] || [];
+  if (inc.length > 0) {
+    detailIncoming.style.display = "block";
+    detailIncomingList.innerHTML = inc.map(id => {
+      const src = nodeMap[id];
+      return "<li>" + (src ? src.label : id) + "</li>";
+    }).join("");
+  } else {
+    detailIncoming.style.display = "none";
+  }
+
+  detailPanel.style.display = "block";
+});
+
+// Double-click to focus
+network.on("doubleClick", function(params) {
+  if (params.nodes.length > 0) {
+    network.focus(params.nodes[0], { scale: 1.5, animation: { duration: 500, easingFunction: "easeInOutQuad" } });
+  }
+});
+</script>
+</body>
+</html>
